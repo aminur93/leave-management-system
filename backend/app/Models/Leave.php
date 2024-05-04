@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Leave extends Model
 {
     use HasFactory;
+
+    public function leaveCategory()
+    {
+        $this->hasMany(LeaveCategory::class);
+    }
 }

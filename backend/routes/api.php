@@ -72,6 +72,7 @@ Route::group(['prefix' => 'v1/admin', 'middleware' => 'jwtAuth'], function (){
     Route::get('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'edit']);
     Route::put('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'update'])->name('leave.update');
     Route::delete('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'destroy']);
+    Route::post('/leave/status/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'leaveStatus']);
     /*leave route end*/
 
     /*leave comment route start*/
