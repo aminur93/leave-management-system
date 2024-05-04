@@ -11,6 +11,11 @@ class Leave extends Model
 
     public function leaveCategory()
     {
-        $this->hasMany(LeaveCategory::class);
+        return $this->belongsTo(LeaveCategory::class);
+    }
+
+    public function leaveComment()
+    {
+        return $this->hasMany(LeaveComment::class);
     }
 }

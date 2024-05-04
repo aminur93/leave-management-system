@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
+use App\Events\leaveNotificationEvent;
 use App\Helper\GlobalMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LeaveRequest;
 use App\Http\Services\Admin\LeaveService;
+use App\Models\Leave;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class LeaveController extends Controller implements HasMiddleware
@@ -60,6 +64,10 @@ class LeaveController extends Controller implements HasMiddleware
 
             $leave = $this->leaveService->store($request);
 
+            $user = User::findOrFail($leave->user_id);
+
+            event(new LeaveNotificationEvent($user, $leave));
+
             return GlobalMessage::success($leave, "Store successful", Response::HTTP_CREATED);
 
         }catch (ValidationException $exception){
@@ -68,7 +76,7 @@ class LeaveController extends Controller implements HasMiddleware
 
         }catch (\Exception $exception){
 
-            return GlobalMessage::error("", $exception->getMessage(), $exception->getCode());
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -95,6 +103,10 @@ class LeaveController extends Controller implements HasMiddleware
         try {
 
             $leave = $this->leaveService->update($request, $id);
+
+            $user = User::findOrFail($leave->user_id);
+
+            event(new LeaveNotificationEvent($user, $leave));
 
             return GlobalMessage::success($leave, "Update successful", Response::HTTP_OK);
 
@@ -134,17 +146,23 @@ class LeaveController extends Controller implements HasMiddleware
     {
         try {
 
-            $leave = $this->leaveService->leaveStatus($request,$id);
+            $this->leaveService->leaveStatus($request,$id);
+
+            $leave = Leave::findOrFail($id);
+
+            $user = User::findOrFail($leave->user_id);
+
+            event(new LeaveNotificationEvent($user, $leave));
 
             return GlobalMessage::success($leave, "Leave status updated successful", Response::HTTP_OK);
 
         }catch (ModelNotFoundException $exception){
 
-            return GlobalMessage::error("", $exception->getMessage(), $exception->getCode());
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_BAD_REQUEST);
 
         }catch (\Exception $exception){
 
-            return GlobalMessage::error("", $exception->getMessage(), $exception->getCode());
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

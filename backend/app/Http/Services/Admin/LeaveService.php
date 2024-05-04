@@ -2,7 +2,9 @@
 
 namespace App\Http\Services\Admin;
 
+use App\Events\leaveNotificationEvent;
 use App\Models\Leave;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +14,7 @@ class LeaveService
 {
     public function index(Request $request)
     {
-        $leave = Leave::with('leaveCategory');
+        $leave = Leave::with('leaveCategory', 'leaveComment');
 
         if ($request->has('sortBy') && $request->has('sortDesc'))
         {
@@ -52,7 +54,7 @@ class LeaveService
 
     public function getAllLeave()
     {
-        $leaves = Leave::with('leaveCategory');
+        $leaves = Leave::with('leaveCategory', 'leaveComment');
 
         return $leaves;
     }
@@ -77,9 +79,10 @@ class LeaveService
             $start_date = Carbon::parse($request->start_date);
             $end_date = Carbon::parse($request->end_date);
 
-            $total_days = $end_date->diffInDays($start_date);
+            $total_days = abs($end_date->diffInDays($start_date));
 
             $leave->total_days = $total_days;
+
             /*finding total days from start date and end date*/
 
             $leave->description = $request->description;
@@ -107,7 +110,7 @@ class LeaveService
 
     public function edit($id)
     {
-        $leave = Leave::with('leaveCategory')->where('id', $id)->first();
+        $leave = Leave::with('leaveCategory', 'leaveComment')->where('id', $id)->first();
 
         return $leave;
     }
@@ -171,10 +174,6 @@ class LeaveService
 
     public function leaveStatus(Request $request, $id)
     {
-        $leave = Leave::findOrFail($id);
-
-        $leave->update($request->status);
-
-        return $leave;
+        $leave = Leave::where('id',$id)->update(['status' => $request->status]);
     }
 }
