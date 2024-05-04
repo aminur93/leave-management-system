@@ -23,7 +23,7 @@ class UserService
 
         } else {
 
-            $users = $users->orderBy('name', 'desc');
+            $users = $users->orderBy('id', 'desc');
         }
 
         $searchValue = $request->input('search');

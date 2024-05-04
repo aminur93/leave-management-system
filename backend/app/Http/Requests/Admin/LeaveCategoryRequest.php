@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class LeaveCategoryRequest extends FormRequest
 {
@@ -21,10 +22,25 @@ class LeaveCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|unique:leave_categories, name',
-            'leave_total' => 'required|integer',
-            'status' => 'required|max:1|min:0'
-        ];
+        if (Request::routeIs('leave_category.store'))
+        {
+            return [
+                'name' => 'required|unique:leave_categories,name',
+                'leave_total' => 'required|integer',
+                'status' => 'required|max:1|min:0'
+            ];
+        }
+
+        if (Request::routeIs('leave_category.update'))
+        {
+            return [
+                'name' => 'required|unique:leave_categories,name',
+                'leave_total' => 'required|integer',
+                'status' => 'max:1|min:0'
+            ];
+        }
+
+        return [];
+
     }
 }

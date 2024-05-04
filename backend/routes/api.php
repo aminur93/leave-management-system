@@ -60,13 +60,18 @@ Route::group(['prefix' => 'v1/admin', 'middleware' => 'jwtAuth'], function (){
 
     /*leave category route start*/
     Route::get('/leave-category', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'index']);
-    Route::post('/leave-category', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'store']);
+    Route::post('/leave-category', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'store'])->name('leave_category.store');
     Route::get('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'edit']);
-    Route::put('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'update']);
+    Route::put('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'update'])->name('leave_category.update');
     Route::delete('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'destroy']);
     /*leave category route end*/
 
     /*leave route start*/
+    Route::get('/leave', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'index']);
+    Route::post('/leave', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'store'])->name('leave.store');
+    Route::get('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'edit']);
+    Route::put('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'update'])->name('leave.update');
+    Route::delete('/leave/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveController::class, 'destroy']);
     /*leave route end*/
 
     /*leave comment route start*/
