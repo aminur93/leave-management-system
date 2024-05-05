@@ -22,7 +22,9 @@ class LeaveCommentrequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required|integer',
+            'leave_id' => 'required|integer',
+            'comment' => 'required|string'
         ];
     }
 }
