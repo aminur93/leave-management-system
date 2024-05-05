@@ -76,6 +76,11 @@ Route::group(['prefix' => 'v1/admin', 'middleware' => 'jwtAuth'], function (){
     /*leave route end*/
 
     /*leave comment route start*/
+    Route::get('/leave-comment', [\App\Http\Controllers\Api\V1\Admin\LeaveCommentController::class, 'index']);
+    Route::post('/leave-comment', [\App\Http\Controllers\Api\V1\Admin\LeaveCommentController::class, 'store'])->name('leave_comment.store');
+    Route::get('/leave-comment/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCommentController::class, 'edit']);
+    Route::put('/leave-comment/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCommentController::class, 'update'])->name('leave_comment.update');
+    Route::delete('/leave-comment/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCommentController::class, 'destroy']);
     /*leave comment route end*/
 });
 /*Admin route end*/

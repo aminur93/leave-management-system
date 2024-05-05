@@ -8,4 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class LeaveComment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'leave_id',
+        'comment'
+    ];
+
+    public function leave()
+    {
+        return $this->belongsTo(Leave::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -14,7 +14,7 @@ class LeaveService
 {
     public function index(Request $request)
     {
-        $leave = Leave::with('leaveCategory', 'leaveComment');
+        $leave = Leave::with('leaveCategory', 'leaveComment', 'user');
 
         if ($request->has('sortBy') && $request->has('sortDesc'))
         {
