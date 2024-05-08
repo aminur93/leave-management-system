@@ -1,11 +1,67 @@
 <script>
-import register from "@/views/auth/Register.vue";
+import {http} from "@/service/HttpService";
 
 export default {
   name: "LeaveLogin",
-  computed: {
-    register() {
-      return register
+
+  data(){
+    return{
+      email: '',
+      password: '',
+      loading: true,
+      errors: {}
+    }
+  },
+
+  computed: {},
+
+  mounted() {
+    if(this.$store.state.token !== '')
+    {
+      return http().post('v1/auth/checkToken')
+          .then(res => {
+            if(res.data.success)
+            {
+              this.$router.push('/dashboard');
+            }else{
+              this.$store.commit('SET_TOKEN', res.data.data.access_token);
+              this.$store.commit('SET_USER', res.data.data.user);
+              this.$store.commit('SET_ROLE', res.data.data.role);
+              this.$store.commit('SET_PERMISSION', res.data.data.permissions);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    }else {
+      this.loading = false;
+    }
+  },
+
+  methods: {
+    login: function(){
+        try {
+
+          let formData = new FormData();
+
+          formData.append('email', this.email);
+          formData.append('password', this.password);
+
+          return http().post('v1/auth/login', formData).then(res => {
+              if (res.data.success)
+              {
+                this.$store.commit('SET_TOKEN', res.data.data.access_token);
+                this.$store.commit('SET_USER', res.data.data.user);
+                this.$store.commit('SET_ROLE', res.data.data.role);
+                this.$store.commit('SET_PERMISSION', res.data.data.permissions);
+                this.$router.push('/dashboard');
+              }
+          }).catch(err => {
+            this.errors = err.response.data.errors;
+          })
+        }catch (e) {
+          console.log(e);
+        }
     }
   }
 }
@@ -14,18 +70,22 @@ export default {
 <template>
     <div class="login">
         <div class="wrapper">
-            <form action="">
+            <form v-on:submit.prevent="login">
             <h2>Login</h2>
 
             <div class="input-box">
-              <input type="text" placeholder="email" required>
+              <input type="text" name="email" v-model="email" placeholder="email">
               <i class='bx bxs-envelope'></i>
+              <p v-if="errors.email" class="error custom_error">{{errors.email[0]}}</p>
             </div>
 
+
             <div class="input-box">
-              <input type="password" placeholder="password" required>
+              <input type="password" name="password" v-model="password" placeholder="password">
               <i class='bx bxs-lock-alt'></i>
+              <p v-if="errors.password" class="error custom_error">{{errors.password[0]}}</p>
             </div>
+
 
             <div class="remember-forget">
               <label for="">
@@ -117,6 +177,7 @@ export default {
   justify-content: space-between;
   font-size: 14.5px;
   margin: -15px 0 15px;
+  margin-top: 25px;
 }
 
 .remember-forget label input{
@@ -161,5 +222,13 @@ export default {
 
 .register-link p a:hover{
   text-decoration: underline;
+}
+
+.custom_error {
+  margin-left: 20px;
+}
+
+.error{
+  color: red;
 }
 </style>

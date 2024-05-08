@@ -68,10 +68,16 @@ class LoginService
 
     protected function responseWithToken($token)
     {
-        $user = User::with('roles', 'roles.permissions')->where('id', Auth::id())->first();
+        $user = User::where('id', Auth::id())->first();
+
+        $role = $user->getRoleNames();
+
+        $permissions = $user->getAllPermissions();
 
         $data = [
             "user" => $user,
+            'role' => $role,
+            'permissions' => $permissions,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => env('JWT_TTL')

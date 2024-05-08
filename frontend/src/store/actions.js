@@ -9,3 +9,11 @@ export const register = ({commit, state}, data) => {
         state.error_status = err.response.status;
     })
 };
+
+export const logout = ({commit}) => {
+
+    return http().post('v1/auth/logout')
+        .then(() => {
+            commit('clearToken');
+        });
+};

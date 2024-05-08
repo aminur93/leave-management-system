@@ -32,6 +32,16 @@ class UserRequest extends FormRequest
             ];
         }
 
+        if (Request::routeIs('register'))
+        {
+            return [
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6|max:18|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,18}$/',
+                'password_confirmation' => 'required_with:password|same:password',
+            ];
+        }
+
         if (Request::routeIs('user.update'))
         {
             return [

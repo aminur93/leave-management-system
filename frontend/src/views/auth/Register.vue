@@ -30,9 +30,6 @@ export default {
   methods: {
     register: async function(){
       try {
-
-        console.log(this.name);
-
         let formData = new FormData();
 
         formData.append("name", this.name);
@@ -57,11 +54,11 @@ export default {
             this.email = '';
             this.password = '';
             this.password_confirmation = '';
+
+            setTimeout(function () {
+              router.push({path: '/'});
+            },5000)
           }
-          
-          setTimeout(function () {
-            router.push({path: '/'});
-          },5000)
         })
       }catch (e) {
         this.$swal.fire({
@@ -78,28 +75,36 @@ export default {
 <template>
   <div class="register">
     <div class="wrapper">
-      <form v-on:submit.prevent="register">
+        <form v-on:submit.prevent="register">
         <h2>Register</h2>
 
         <div class="input-box">
-          <input type="text" name="name" v-model="name" placeholder="name" required>
-          <i class='bx bxs-user'></i>
+            <input type="text" name="name" v-model="name" placeholder="name">
+            <i class='bx bxs-user'></i>
         </div>
+          <p v-if="errors.name" class="error custom_error">{{errors.name[0]}}</p>
+
 
         <div class="input-box">
-          <input type="text" name="email" v-model="email" placeholder="email" required>
+          <input type="text" name="email" v-model="email" placeholder="email">
           <i class='bx bxs-envelope'></i>
         </div>
+          <p v-if="errors.email" class="error custom_error">{{errors.email[0]}}</p>
+
 
         <div class="input-box">
-          <input type="password" name="password" v-model="password" placeholder="password" required>
+          <input type="password" name="password" v-model="password" placeholder="password">
           <i class='bx bxs-lock-alt'></i>
         </div>
+          <p v-if="errors.password" class="error custom_error">{{errors.password[0]}}</p>
+
 
         <div class="input-box">
-          <input type="password" name="password_confirmation" v-model="password_confirmation" placeholder="password confirmation" required>
+          <input type="password" name="password_confirmation" v-model="password_confirmation" placeholder="password confirmation">
           <i class='bx bxs-lock-alt'></i>
         </div>
+          <p v-if="errors.password_confirmation" class="error custom_error">{{errors.password_confirmation[0]}}</p>
+
 
         <button type="submit" class="btn">Submit</button>
 
@@ -227,5 +232,13 @@ export default {
 
 .register-link p a:hover{
   text-decoration: underline;
+}
+
+.custom_error {
+  margin-left: 20px;
+}
+
+.error{
+  color: red;
 }
 </style>
