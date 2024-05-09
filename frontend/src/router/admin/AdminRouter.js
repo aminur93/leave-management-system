@@ -1,6 +1,7 @@
 import Dashboard from "@/views/admin/Dashboard.vue";
 import store from "@/store";
 import Master from "@/views/admin/Master.vue";
+import PermissionRouter from "@/router/admin/PermissionRouter";
 
 export default [
     {
@@ -10,8 +11,10 @@ export default [
             {
                 path: '',
                 name: 'Dashboard',
-                component: Dashboard
-            }
+                component: Dashboard,
+            },
+
+            ...PermissionRouter
         ],
         beforeEnter(to, from, next){
             if (!store.getters['AuthToken'])

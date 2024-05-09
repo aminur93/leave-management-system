@@ -5,10 +5,32 @@ export default {
     return{
       drawer: null ,
       selectedItem: 0,
+
       items: [
         { title: 'Profile', icon: 'mdi mdi-account-tie', route: '/dashboard/profile'},
         { title: 'Settings', icon: 'mdi-cog', route: '/dashboard/change-password' },
       ],
+
+      dropDownItems: [
+        {
+          action: 'mdi-account-circle',
+          items: [
+            { title: 'User', icon: 'mdi mdi-plus', route: '/dashboard/user'},
+            { title: 'Roles', icon: 'mdi mdi-plus', route: '/dashboard/role'},
+            { title: 'Permission', icon: 'mdi mdi-plus', route: '/dashboard/permission'}
+          ],
+          title: 'User Management'
+        },
+      ],
+
+      open: ['Users'],
+      cruds: [
+        ['Create', 'mdi-plus-outline'],
+        ['Read', 'mdi-file-outline'],
+        ['Update', 'mdi-update'],
+        ['Delete', 'mdi-delete'],
+      ],
+
     }
   },
 
@@ -46,9 +68,34 @@ export default {
       <v-divider class="custom_divider"></v-divider>
 
       <v-list density="compact" nav>
-        <v-list-item class="new_theme" prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-        <v-list-item class="new_theme" prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
-        <v-list-item class="new_theme" prepend-icon="mdi-account-group-outline" title="Users" value="users"></v-list-item>
+        <v-list-item class="new_theme" router to="/dashboard" prepend-icon="mdi-view-dashboard" title="Dashboard" value="Dashboard"></v-list-item>
+        <v-list-item class="new_theme" router to="/dashboard/leave-category" prepend-icon="mdi mdi-clipboard-list" title="Leave Category" value="Leave Category"></v-list-item>
+        <v-list-item class="new_theme" router to="/dashboard/leave" prepend-icon="mdi mdi-bed" title="Leave" value="Leave"></v-list-item>
+        <v-list-item class="new_theme" router to="/dashboard/leave-comment" prepend-icon="mdi mdi-comment" title="Leave Comment" value="Leave Comment"></v-list-item>
+
+        <v-list-group
+            v-for="item in dropDownItems"
+            :key="item.title"
+            :value="item.title"
+            :items="item.items"
+            no-action
+        >
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" :prepend-icon="item.action" :title="item.title" class="new_theme"></v-list-item>
+          </template>
+
+          <v-list-item
+              v-for="child in item.items"
+              :key="child.title"
+              :prepend-icon="child.icon"
+              :title="child.title"
+              :value="child.title"
+              router :to="child.route"
+              exact
+              class="sub_new_theme_text"
+          >
+          </v-list-item>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -78,6 +125,8 @@ export default {
               <v-list-item
                   v-for="(item, i) in items"
                   :key="i"
+                  router :to="item.route"
+                  exact
               >
                 <v-list-item-title style="cursor: pointer">
                   <v-icon :icon="item.icon"></v-icon>
@@ -94,7 +143,7 @@ export default {
   </v-app-bar>
 </template>
 
-<style>
+<style scoped>
 nav{
   position: fixed !important;
 }
@@ -137,8 +186,17 @@ header{
   color: white !important;
 }
 
+.sub_new_theme{
+  color: #161d28;
+}
+.sub_new_theme_text{
+  color: #F5F5F5;
+  font-weight: 900 !important;
+  font-size: 14px !important;
+}
+
 .v-list .v-list-item--active {
-  color: brown;
+  color: #F5F5F5;
   margin-bottom: 10px;
 }
 

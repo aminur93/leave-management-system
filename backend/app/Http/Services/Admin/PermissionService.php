@@ -23,8 +23,7 @@ class PermissionService
         }
 
         $searchValue = $request->input('search');
-        $itemsPerPage = $request->input('itemsPerPage');
-        $defaultItemsPerPage = 10;
+        $itemsPerPage = 10;
 
         if ($searchValue)
         {
@@ -32,21 +31,21 @@ class PermissionService
                 $query->where('name', 'like', '%' . $searchValue . '%');
             });
 
-            $itemsPerPage = 10;
 
             if($request->has('itemsPerPage')) {
+                
                 $itemsPerPage = $request->get('itemsPerPage');
 
                 return $permissions->paginate($itemsPerPage, ['*'], $request->get('page'));
             }
         }
 
-        if ($itemsPerPage)
+        if ($request->has('itemsPerPage'))
         {
-            return $permissions->paginate($itemsPerPage);
+            $itemsPerPage = $request->get('itemsPerPage');
         }
 
-        return $permissions->paginate($defaultItemsPerPage);
+        return $permissions->paginate($itemsPerPage);
     }
 
     public function getAllPermissions()
