@@ -1,5 +1,6 @@
 <script>
 import {http} from "@/service/HttpService";
+import {mapState} from "vuex";
 
 export default {
   name: "LeavePermission",
@@ -19,7 +20,21 @@ export default {
     }
   },
 
-  computed: {},
+  computed: {
+    startIndex() {
+      let currentPage = this.options.page;
+      let itemsPerPage = this.options.itemsPerPage;
+
+      return (currentPage - 1) * itemsPerPage + 1;
+    },
+
+    ...mapState({
+      message: state => state.permission.success_message,
+      errors: state => state.permission.errors,
+      success_status: state => state.permission.success_status,
+      error_status: state => state.permission.error_status
+    })
+  },
 
   watch: {
     options: {
@@ -61,6 +76,36 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+    },
+
+    calculateIndex(item) {
+      return this.startIndex + item;
+    },
+
+    deletePermission: async function(id){
+      try {
+        await this.$store.dispatch("permission/DestroyPermission", id).then(() => {
+          if (this.success_status === 200)
+          {
+            this.$swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: 'Permission destroy successful',
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            this.getAllPermissions();
+          }
+        })
+      }catch (e) {
+        this.$swal.fire({
+          icon: 'error',
+          text: 'Oops',
+          title: 'Something wen wrong!!!',
+        });
+      }
     }
   }
 }
@@ -88,7 +133,7 @@ export default {
 
                     <v-col cols="6">
                       <v-card-actions class="justify-end">
-                        <v-btn color="success" router to="/dashboard/add-permission">
+                        <v-btn color="success" router to="/add-permission">
                           <v-icon small left>mdi-plus</v-icon>
                           <span>Add New</span>
                         </v-btn>
@@ -129,14 +174,14 @@ export default {
                           fixed-header
                       >
                         <template v-slot:[`item.id`]="{ index }">
-                          <td>{{ index + 1 }}</td>
+                          <td>{{ calculateIndex(index) }}</td>
                         </template>
 
 
                         <template v-slot:[`item.actions`]="{ item }">
                           <v-row align="center" justify="center">
                             <td :class="['mx-2']">
-                                <v-btn color="warning" icon="mdi-pencil" size="x-small" router :to="`/dashboard/edit-permission/${item.id}`"></v-btn>
+                                <v-btn color="warning" icon="mdi-pencil" size="x-small" router :to="`/edit-permission/${item.id}`"></v-btn>
                             </td>
 
                             <td>

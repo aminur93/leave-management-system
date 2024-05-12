@@ -1,5 +1,6 @@
 <script>
 import {http} from "@/service/HttpService";
+import {mapState} from "vuex";
 
 export default {
   name: "LeaveLogin",
@@ -13,7 +14,14 @@ export default {
     }
   },
 
-  computed: {},
+  computed: {
+    ...mapState({
+      message: state => state.success_message,
+      errors: state => state.errors,
+      success_status: state => state.success_status,
+      error_status: state => state.error_status
+    })
+  },
 
   mounted() {
     if(this.$store.state.token !== '')
@@ -60,7 +68,11 @@ export default {
             this.errors = err.response.data.errors;
           })
         }catch (e) {
-          console.log(e);
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
         }
     }
   }

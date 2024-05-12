@@ -7,34 +7,41 @@ export default {
       selectedItem: 0,
 
       items: [
-        { title: 'Profile', icon: 'mdi mdi-account-tie', route: '/dashboard/profile'},
-        { title: 'Settings', icon: 'mdi-cog', route: '/dashboard/change-password' },
-      ],
+        { title: 'Profile', icon: 'mdi mdi-account-tie', route: '/profile', header_menu: true, dropdown: false},
+        { title: 'Settings', icon: 'mdi-cog', route: '/change-password', header_menu: true, dropdown: false },
 
-      dropDownItems: [
+        { title: 'DashBoard', icon: 'mdi-view-dashboard', route: '/dashboard', sidebar_menu: true, dropdown: false },
+        { title: 'Leave-Category', icon: 'mdi mdi-clipboard-list', route: '/leave-category', sidebar_menu: true, dropdown: false },
+        { title: 'Leave', icon: 'mdi mdi-bed', route: '/leave', sidebar_menu: true, dropdown: false },
+
         {
           action: 'mdi-account-circle',
           items: [
-            { title: 'User', icon: 'mdi mdi-plus', route: '/dashboard/user'},
-            { title: 'Roles', icon: 'mdi mdi-plus', route: '/dashboard/role'},
-            { title: 'Permission', icon: 'mdi mdi-plus', route: '/dashboard/permission'}
+            { title: 'User', icon: 'mdi mdi-plus', route: '/user'},
+            { title: 'Roles', icon: 'mdi mdi-plus', route: '/role'},
+            { title: 'Permission', icon: 'mdi mdi-plus', route: '/permission'}
           ],
-          title: 'User Management'
+          title: 'User Management',
+          dropdown: true,
+          sidebar_menu: true
         },
+
+        { title: 'Leave-Comment', icon: 'mdi mdi-bed', route: '/leave-comment', sidebar_menu: true, dropdown: false },
       ],
 
-      open: ['Users'],
-      cruds: [
-        ['Create', 'mdi-plus-outline'],
-        ['Read', 'mdi-file-outline'],
-        ['Update', 'mdi-update'],
-        ['Delete', 'mdi-delete'],
-      ],
-
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
 
-  computed: {},
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => item.header_menu && !item.dropdown);
+    },
+
+    sidebarFilteredItems(){
+      return this.items.filter(item => item.sidebar_menu);
+    }
+  },
 
   mounted(){
   },
@@ -59,7 +66,7 @@ export default {
     >
       <v-list-item
           prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-          title="John Leider"
+          :title="user.name"
           nav
           style="margin-top: 10px"
       >
@@ -67,14 +74,20 @@ export default {
 
       <v-divider class="custom_divider"></v-divider>
 
-      <v-list density="compact" nav>
-        <v-list-item class="new_theme" router to="/dashboard" prepend-icon="mdi-view-dashboard" title="Dashboard" value="Dashboard"></v-list-item>
-        <v-list-item class="new_theme" router to="/dashboard/leave-category" prepend-icon="mdi mdi-clipboard-list" title="Leave Category" value="Leave Category"></v-list-item>
-        <v-list-item class="new_theme" router to="/dashboard/leave" prepend-icon="mdi mdi-bed" title="Leave" value="Leave"></v-list-item>
-        <v-list-item class="new_theme" router to="/dashboard/leave-comment" prepend-icon="mdi mdi-comment" title="Leave Comment" value="Leave Comment"></v-list-item>
+      <v-list density="compact" nav v-for="(item,i) in sidebarFilteredItems" :key="i">
+
+        <v-list-item
+            v-if="!item.dropdown"
+            :title="item.title"
+            :prepend-icon="item.icon"
+            class="new_theme"
+            :to="item.route"
+            exact
+        >
+        </v-list-item>
 
         <v-list-group
-            v-for="item in dropDownItems"
+            v-if="item.dropdown"
             :key="item.title"
             :value="item.title"
             :items="item.items"
@@ -90,7 +103,7 @@ export default {
               :prepend-icon="child.icon"
               :title="child.title"
               :value="child.title"
-              router :to="child.route"
+              :to="child.route"
               exact
               class="sub_new_theme_text"
           >
@@ -107,8 +120,6 @@ export default {
         <v-app-bar-title :class="['text-subtitle-1', 'text-grey']">Leave Management</v-app-bar-title>
 
         <template v-slot:append>
-          <v-btn icon="mdi-heart"></v-btn>
-
           <v-btn icon="mdi-magnify"></v-btn>
 
           <v-menu transition="scale-transition">
@@ -123,7 +134,7 @@ export default {
 
             <v-list style="margin-top: 5px">
               <v-list-item
-                  v-for="(item, i) in items"
+                  v-for="(item, i) in filteredItems"
                   :key="i"
                   router :to="item.route"
                   exact

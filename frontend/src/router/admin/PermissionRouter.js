@@ -4,17 +4,17 @@ import EditPermission from "@/views/admin/user_management/permission/EditPermiss
 
 export default [
     {
-        path: '/dashboard/permission',
+        path: '/permission',
         name: 'Permission',
         component: Permission
     },
     {
-        path: '/dashboard/add-permission',
+        path: '/add-permission',
         name: 'AddPermission',
         component: AddPermission
     },
     {
-        path: '/dashboard/edit-permission/:id',
+        path: '/edit-permission/:id',
         name: 'EditPermission',
         component: EditPermission
     }
