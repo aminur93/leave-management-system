@@ -74,7 +74,15 @@ class UserService
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
 
-            $user->syncRoles($request->role);
+            $role = $request->input('role');
+
+            $stringWithCommas = $role[0];
+
+            $stringArray = explode(',', $stringWithCommas);
+
+            $integerArray = array_map('intval', $stringArray);
+
+            $user->syncRoles($integerArray);
 
             $user->save();
 
@@ -91,7 +99,11 @@ class UserService
 
     public function edit($id)
     {
-        $user = User::with('roles', 'roles.permissions')->where('id', $id)->first();
+        $user = User::where('id', $id)->first();
+
+        $role_id = DB::table('model_has_roles')->select('role_id')->where('model_id', $id)->first();
+
+        $user->role_id = $role_id->role_id;
 
         if ($id != $user->id)
         {
@@ -121,7 +133,15 @@ class UserService
 
             if ($request->has('role'))
             {
-                $user->syncRoles($request->role);
+                $role = $request->input('role');
+
+                $stringWithCommas = $role[0];
+
+                $stringArray = explode(',', $stringWithCommas);
+
+                $integerArray = array_map('intval', $stringArray);
+
+                $user->syncRoles($integerArray);
             }
 
 

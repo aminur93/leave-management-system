@@ -57,6 +57,11 @@ const mutations = {
             state.success_message = "";
         }
     },
+
+    SET_ERROR(state, { errors, errorStatus }) {
+        state.errors = errors;
+        state.error_status = errorStatus;
+    }
 };
 
 /* -------------------------------------------------------------------------- */
@@ -90,8 +95,10 @@ const actions = {
                 return result
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             });
     },
     /*end store permission*/

@@ -59,11 +59,17 @@ export default {
               }
           })
       }catch (e) {
-        this.$swal.fire({
-          icon: 'error',
-          text: 'Oops',
-          title: 'Something wen wrong!!!',
-        });
+        if (this.error_status === 422)
+        {
+          console.log('error')
+        }else {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
+        }
+
       }
     }
   }

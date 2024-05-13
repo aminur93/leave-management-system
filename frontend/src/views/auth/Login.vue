@@ -17,9 +17,7 @@ export default {
   computed: {
     ...mapState({
       message: state => state.success_message,
-      errors: state => state.errors,
       success_status: state => state.success_status,
-      error_status: state => state.error_status
     })
   },
 

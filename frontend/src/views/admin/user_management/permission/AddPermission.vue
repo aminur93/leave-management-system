@@ -9,7 +9,7 @@ export default {
     return{
       add_permission: {
         name: ''
-      }
+      },
     }
   },
 
@@ -17,8 +17,8 @@ export default {
     ...mapState({
       message: state => state.permission.success_message,
       errors: state => state.permission.errors,
+      error_status: state => state.permission.error_status,
       success_status: state => state.permission.success_status,
-      error_status: state => state.permission.error_status
     })
   },
 
@@ -50,11 +50,17 @@ export default {
             }
         })
       }catch (e) {
-        this.$swal.fire({
-          icon: 'error',
-          text: 'Oops',
-          title: 'Something wen wrong!!!',
-        });
+        if (this.error_status === 422)
+        {
+          console.log('error');
+        }else {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
+        }
+
       }
     }
   }
@@ -74,6 +80,7 @@ export default {
 
               <v-card-text>
                   <v-form v-on:submit.prevent="addPermission">
+
                     <v-col cols="12">
                       <v-row wrap>
                         <v-col cols="12" md="8" sm="12" lg="12">
@@ -87,7 +94,6 @@ export default {
                             ></v-text-field>
                           <p v-if="errors.name" class="error custom_error">{{errors.name[0]}}</p>
                         </v-col>
-
                       </v-row>
 
                       <v-row wrap>
