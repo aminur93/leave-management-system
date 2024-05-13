@@ -74,41 +74,44 @@ export default {
 
       <v-divider class="custom_divider"></v-divider>
 
-      <v-list density="compact" nav v-for="(item,i) in sidebarFilteredItems" :key="i">
+      <v-list density="compact" nav>
 
-        <v-list-item
-            v-if="!item.dropdown"
-            :title="item.title"
-            :prepend-icon="item.icon"
-            class="new_theme"
-            :to="item.route"
-            exact
-        >
-        </v-list-item>
-
-        <v-list-group
-            v-if="item.dropdown"
-            :key="item.title"
-            :value="item.title"
-            :items="item.items"
-            no-action
-        >
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :prepend-icon="item.action" :title="item.title" class="new_theme"></v-list-item>
-          </template>
-
+        <div v-for="(item,i) in sidebarFilteredItems" :key="i">
           <v-list-item
-              v-for="child in item.items"
-              :key="child.title"
-              :prepend-icon="child.icon"
-              :title="child.title"
-              :value="child.title"
-              :to="child.route"
+              v-if="!item.dropdown"
+              :title="item.title"
+              :prepend-icon="item.icon"
+              :to="item.route"
               exact
-              class="sub_new_theme_text"
+              class="new_theme"
           >
           </v-list-item>
-        </v-list-group>
+
+          <v-list-group
+              v-if="item.dropdown"
+              :key="item.title"
+              :value="item.title"
+              :items="item.items"
+              no-action
+          >
+            <template v-slot:activator="{ props }">
+              <v-list-item v-bind="props" :prepend-icon="item.action" :title="item.title" class="new_theme"></v-list-item>
+            </template>
+
+            <v-list-item
+                v-for="child in item.items"
+                :key="child.title"
+                :prepend-icon="child.icon"
+                :title="child.title"
+                :value="child.title"
+                :to="child.route"
+                exact
+                class="sub_new_theme_text"
+            >
+            </v-list-item>
+          </v-list-group>
+        </div>
+
       </v-list>
     </v-navigation-drawer>
 

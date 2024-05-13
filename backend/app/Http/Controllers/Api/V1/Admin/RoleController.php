@@ -67,7 +67,7 @@ class RoleController extends Controller implements HasMiddleware
 
         }catch (\Exception $exception){
 
-            return GlobalMessage::error("", $exception->getMessage(), $exception->status);
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

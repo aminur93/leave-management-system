@@ -19,7 +19,7 @@ class PermissionService
             $sortDesc = $request->query('sortDesc') === 'true' ? 'desc' : 'asc';
             $permissions = $permissions->orderBy($sortBy, $sortDesc);
         } else {
-            $permissions = $permissions->orderBy('name', 'desc');
+            $permissions = $permissions->orderBy('id', 'desc');
         }
 
         $searchValue = $request->input('search');
@@ -33,7 +33,7 @@ class PermissionService
 
 
             if($request->has('itemsPerPage')) {
-                
+
                 $itemsPerPage = $request->get('itemsPerPage');
 
                 return $permissions->paginate($itemsPerPage, ['*'], $request->get('page'));

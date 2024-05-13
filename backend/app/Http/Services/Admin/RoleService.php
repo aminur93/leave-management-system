@@ -71,7 +71,16 @@ class RoleService
 
             $role->name = $request->name;
 
-            $role->syncPermissions($request->input('permission'));
+            $permission = $request->input('permission');
+
+            $stringWithCommas = $permission[0];
+
+            $stringArray = explode(',', $stringWithCommas);
+
+            $integerArray = array_map('intval', $stringArray);
+
+
+            $role->syncPermissions($integerArray);
 
             $role->save();
 
@@ -88,14 +97,29 @@ class RoleService
 
     public function edit($id)
     {
-        $role = Role::where('id', $id)->with('permissions')->first();
+        $role = Role::where('id', $id)->first();
+
+        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+            ->all();
+
+        $rp_array = [];
+
+        foreach ($rolePermissions as $rp) {
+            $rp_array[] = $rp;
+        }
 
         if ($id != $role->id)
         {
             throw new \Exception("Model not found");
         }
 
-        return $role;
+        $data = [
+                "role" => $role,
+                "role_permission" => $rp_array
+            ];
+
+        return $data;
     }
 
     public function update(Request $request, $id)
@@ -110,7 +134,15 @@ class RoleService
 
             $role->name = $request->name;
 
-            $role->syncPermissions($request->input('permission'));
+            $permission = $request->input('permission');
+
+            $stringWithCommas = $permission[0];
+
+            $stringArray = explode(',', $stringWithCommas);
+
+            $integerArray = array_map('intval', $stringArray);
+
+            $role->syncPermissions($integerArray);
 
             $role->save();
 

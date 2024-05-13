@@ -20,7 +20,7 @@ const state = {
 /* -------------------------------------------------------------------------- */
 const mutations = {
     GET_ALL_PERMISSION: (state, data) => {
-        state.permissions = data.data;
+        state.permissions = data;
     },
 
     STORE_PERMISSION: (state, data) => {
@@ -92,7 +92,6 @@ const actions = {
             .catch((err) => {
                 state.errors = err.response.data.errors;
                 state.error_status = err.response.status;
-                console.log(state.errors);
             });
     },
     /*end store permission*/

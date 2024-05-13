@@ -7,6 +7,7 @@ import * as mutations from "./mutations";
 import * as actions from "./actions";
 import permission from "@/store/modules/user_management/permission";
 import roles from "@/store/modules/user_management/role";
+import user from "@/store/modules/user_management/user";
 
 const store = createStore({
     state,
@@ -16,7 +17,8 @@ const store = createStore({
 
     modules: {
         permission,
-        roles
+        roles,
+        user
     },
 
     plugins: [

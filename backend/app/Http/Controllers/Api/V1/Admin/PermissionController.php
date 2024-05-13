@@ -116,7 +116,7 @@ class PermissionController extends Controller implements HasMiddleware
         try {
             $this->permissionService->destroy($id);
 
-            return GlobalMessage::success("", "Delete successful", Response::HTTP_NO_CONTENT);
+            return GlobalMessage::success("", "Delete successful", Response::HTTP_OK);
 
         }catch (ModelNotFoundException $exception){
 

@@ -6,7 +6,7 @@ export function http(){
         baseURL: store.state.apiUrl,
         headers: {
             'Accept' : "application/json",
-            'Content-Type' : ['application/json'],
+            'Content-Type' : ['application/json', 'multipart/form-data'],
             'Authorization' : 'Bearer '+ store.state.token
         }
     });
