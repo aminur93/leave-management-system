@@ -68,6 +68,7 @@ Route::group(['prefix' => 'v1/admin', 'middleware' => 'jwtAuth'], function (){
     Route::get('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'edit']);
     Route::put('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'update'])->name('leave_category.update');
     Route::delete('/leave-category/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'destroy']);
+    Route::post('/leave-category/status/{id}', [\App\Http\Controllers\Api\V1\Admin\LeaveCategoryController::class, 'changeStatus']);
     /*leave category route end*/
 
     /*leave route start*/

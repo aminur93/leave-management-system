@@ -68,7 +68,16 @@ export default {
           }
         })
       }catch (e) {
-        console.log(e);
+        if (this.error_status === 422)
+        {
+          console.log('error');
+        }else {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
+        }
       }
     }
   }
@@ -157,7 +166,7 @@ export default {
                       </v-col>
 
                       <v-row wrap>
-                      <v-col cols="12" md="8" sm="12" lg="12" :class="['d-flex', 'justify-end']">
+                        <v-col cols="12" md="8" sm="12" lg="12" :class="['d-flex', 'justify-end']">
                         <v-btn
                             flat
                             color="primary"
@@ -176,7 +185,7 @@ export default {
                           Submit
                         </v-btn>
                       </v-col>
-                    </v-row>
+                      </v-row>
                     </v-row>
                   </v-col>
                 </v-form>
@@ -190,10 +199,6 @@ export default {
 </template>
 
 <style scoped>
-.custom_error {
-  margin-left: 20px;
-}
-
 .error{
   color: red;
 }

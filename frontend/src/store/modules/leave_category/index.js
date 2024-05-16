@@ -4,9 +4,8 @@
 import {http} from "@/service/HttpService";
 
 const state = {
-    roles: [],
-    role: {},
-    rolePermission: [],
+    leaveCategories: [],
+    leaveCategory: {},
     success_message: "",
     errors: {},
     error_message: "",
@@ -18,69 +17,70 @@ const state = {
 /*                              Mutations Define                              */
 /* -------------------------------------------------------------------------- */
 const mutations = {
-    GET_ALL_ROLE: (state, data) => {
-        state.roles = data;
+
+    GET_ALL_LEAVE_CATEGORY: (state, data) => {
+        state.leaveCategories = data;
     },
 
-    STORE_ROLE: (state, data) => {
-        if (state.roles.push(data.data)) {
+    STORE_LEAVE_CATEGORY: (state, data) => {
+        if (state.leaveCategories.push(data.data))
+        {
             state.success_message = data.data.message;
             state.success_status = data.status;
-        } else {
-            state.success_message = "";
+        }else {
+            state.success_message = '';
         }
     },
 
-    GET_SINGLE_ROLE: (state, data) => {
-        state.role = data.role;
-        state.rolePermission = data.role_permission;
+    GET_SINGLE_LEAVE_CATEGORY: (state, data) => {
+        state.leaveCategory = data;
     },
 
-    UPDATE_VALUE: (state, data) => {
-        state.rolePermission = data;
-    },
-
-    UPDATE_ROLE: (state, data) => {
-        if (state.roles.push(data.data)) {
+    UPDATE_LEAVE_CATEGORY: (state, data) => {
+        if (state.leaveCategories.push(data.data))
+        {
             state.success_message = data.data.message;
             state.success_status = data.status;
-        } else {
-            state.success_message = "";
         }
     },
 
-    DELETE_ROLE: (state, {id, data}) => {
-        if (id) {
-            state.menus = state.roles.filter((item) => {
-                return id !== item.id;
-            });
+    DELETE_LEAVE_CATEGORY: (state, {id, data}) => {
+        if (id)
+        {
+            state.leaveCategories = state.leaveCategories.filter(item => {
+                return item.id !== id;
+            })
 
-            state.success_message = data.message;
+            state.success_message = data.data.message;
             state.success_status = data.status;
-        } else {
-            state.success_message = "";
         }
+    },
+
+    STATUS_CHANGE_LEAVE_CATEGORY: (state, data) => {
+        state.success_message = data.data.message;
+        state.success_status = data.status;
     },
 
     SET_ERROR(state, { errors, errorStatus }) {
         state.errors = errors;
         state.error_status = errorStatus;
     }
-};
+}
 
 /* -------------------------------------------------------------------------- */
 /*                               Actions Define                               */
 /* -------------------------------------------------------------------------- */
 const actions = {
-    /*Get all roles start*/
-    async GetAllRole({ commit }) {
+
+    /*get all leave categories start*/
+    async GetAllLeaveCategory({ commit }) {
         try {
-            const result = await http().get("v1/admin/role", {
+            const result = await http().get("v1/admin/leave-category", {
                 params: {
                     pagination: false
                 }
             });
-            commit("GET_ALL_ROLE", result.data.data);
+            commit("GET_ALL_LEAVE_CATEGORY", result.data.data);
         } catch (err) {
             const errors = err.response.data.errors;
             const errorStatus = err.response.status;
@@ -88,83 +88,93 @@ const actions = {
             throw err; // Re-throw the error to propagate it to the caller
         }
     },
-    /*Get all roles end*/
+    /*get all leave categories end*/
 
-    /*Store role start*/
-    StoreRole: ({commit}, data) => {
+    /*store leave category start*/
+    StoreLeaveCategory: ({commit}, data) => {
         return http()
-            .post("v1/admin/role", data)
+            .post("v1/admin/leave-category", data)
             .then((result) => {
-                commit("STORE_ROLE", result);
-                return result
+                commit("STORE_LEAVE_CATEGORY", result);
             })
             .catch((err) => {
                 const errors = err.response.data.errors;
                 const errorStatus = err.response.status;
                 commit("SET_ERROR", { errors, errorStatus });
-                throw err; // Re-throw the error to propagate it to the caller
+                throw err;
             })
     },
-    /*Store role end*/
+    /*store leave category end*/
 
-    /*edit role start*/
-    editRole: ({commit}, id) => {
+    /*get single leave category start*/
+    GetSingleLeaveCategory: ({commit}, id) => {
         return http()
-            .get(`v1/admin/role/${id}`)
+            .get(`v1/admin/leave-category/${id}`)
             .then((result) => {
-                commit("GET_SINGLE_ROLE", result.data.data);
+                commit("GET_SINGLE_LEAVE_CATEGORY", result.data.data);
             })
             .catch((err) => {
                 const errors = err.response.data.errors;
                 const errorStatus = err.response.status;
                 commit("SET_ERROR", { errors, errorStatus });
-                throw err; // Re-throw the error to propagate it to the caller
+                throw err;
             })
     },
-    /*edit role end*/
+    /*get single leave category end*/
 
-    /*update role start*/
-    UpdateRole: ({commit}, {id, data}) => {
+    /*update leave category start*/
+    UpdateLeaveCategory: ({commit}, {id, data}) => {
         return http()
-            .put(`v1/admin/role/${id}`, data)
+            .put(`v1/admin/leave-category/${id}`, data)
             .then((result) => {
-                commit("UPDATE_ROLE", result);
-                return result
+                commit("UPDATE_LEAVE_CATEGORY", result);
             })
             .catch((err) => {
                 const errors = err.response.data.errors;
                 const errorStatus = err.response.status;
                 commit("SET_ERROR", { errors, errorStatus });
-                throw err; // Re-throw the error to propagate it to the caller
+                throw err;
             })
     },
-    /*update role end*/
+    /*update leave category end*/
 
-    /*destroy role start*/
-    DeleteRole: ({commit}, id) => {
+    /*destroy leave category start*/
+    DeleteLeaveCategory: ({commit}, id) => {
         return http()
-            .delete(`v1/admin/role/${id}`)
+            .delete(`v1/admin/leave-category/${id}`)
             .then((result) => {
-                commit("DELETE_ROLE", { id: id, data: result.data });
+                commit("DELETE_LEAVE_CATEGORY", {id:id, data:result});
             })
             .catch((err) => {
                 const errors = err.response.data.errors;
                 const errorStatus = err.response.status;
                 commit("SET_ERROR", { errors, errorStatus });
-                throw err; // Re-throw the error to propagate it to the caller
+                throw err;
+            })
+    },
+    /*destroy leave category end*/
+
+    /*status change start*/
+    statusChange: ({commit}, id) => {
+        return http()
+            .post(`v1/admin/leave-category/status/${id}`)
+            .then((result) => {
+                commit("STATUS_CHANGE_LEAVE_CATEGORY", result);
+            })
+            .catch((err) => {
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err;
             })
     }
-    /*destroy role end*/
-};
+    /*status change end*/
+}
 
 /* -------------------------------------------------------------------------- */
 /*                               Getters Define                               */
 /* -------------------------------------------------------------------------- */
-const getters = {
-    rolePermissions: (state) => {
-        return state.rolePermission;
-    }
-};
+const getters = {}
 
 export default {
     namespaced: true,

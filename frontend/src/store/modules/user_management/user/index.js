@@ -54,6 +54,11 @@ const mutations = {
         } else {
             state.success_message = "";
         }
+    },
+
+    SET_ERROR(state, { errors, errorStatus }) {
+        state.errors = errors;
+        state.error_status = errorStatus;
     }
 }
 
@@ -72,9 +77,10 @@ const actions = {
             });
             commit("GET_ALL_USER", result.data.data);
         } catch (err) {
-            // Handle errors properly, considering Vuex store structure
-            state.errors = err.response.data.errors;
-            state.error_status = err.response.status;
+            const errors = err.response.data.errors;
+            const errorStatus = err.response.status;
+            commit("SET_ERROR", { errors, errorStatus });
+            throw err; // Re-throw the error to propagate it to the caller
         }
     },
     /*get all users end*/
@@ -87,8 +93,10 @@ const actions = {
                 commit("STORE_USER", result);
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             })
     },
     /*store user end*/
@@ -101,8 +109,10 @@ const actions = {
                 commit("GET_SINGLE_USER", result.data.data);
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             })
     },
     /*get single user end*/
@@ -115,8 +125,10 @@ const actions = {
                 commit("UPDATE_USER", result);
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             })
     },
     /*update user end*/
@@ -129,8 +141,10 @@ const actions = {
                 commit("DELETE_USER", {id:id, data:result});
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             })
     }
     /*destroy user end*/

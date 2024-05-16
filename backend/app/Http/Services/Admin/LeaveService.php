@@ -4,6 +4,7 @@ namespace App\Http\Services\Admin;
 
 use App\Events\leaveNotificationEvent;
 use App\Models\Leave;
+use App\Models\LeaveCategory;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -87,12 +88,7 @@ class LeaveService
 
             $leave->description = $request->description;
 
-            if ($request->status != null)
-            {
-                $leave->status = 1;
-            }else{
-                $leave->status = 0;
-            }
+            $leave->status = 0;
 
             $leave->save();
 
@@ -142,12 +138,8 @@ class LeaveService
 
             $leave->description = $request->description ?? $leave->description;
 
-            if ($request->status != null)
-            {
-                $leave->status = 1;
-            }else{
-                $leave->status = 0;
-            }
+            $leave->status = $request->status ?? $leave->status;
+
 
             $leave->save();
 
@@ -174,6 +166,6 @@ class LeaveService
 
     public function leaveStatus(Request $request, $id)
     {
-        $leave = Leave::where('id',$id)->update(['status' => $request->status]);
+        Leave::where('id', $id)->update(['status' => $request->status]);
     }
 }

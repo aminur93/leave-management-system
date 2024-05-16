@@ -129,4 +129,22 @@ class LeaveCategoryController extends Controller implements HasMiddleware
             return GlobalMessage::error("", $exception->getMessage(), $exception->getCode());
         }
     }
+
+    public function changeStatus($id)
+    {
+        try {
+
+            $this->leaveCategoryService->changeStatus($id);
+
+            return GlobalMessage::success("", "Status change successful", Response::HTTP_OK);
+
+        }catch (ModelNotFoundException $exception){
+
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_BAD_REQUEST);
+
+        }catch (\Exception $exception){
+
+            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

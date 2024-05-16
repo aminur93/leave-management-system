@@ -27,7 +27,7 @@ class LeaveCategoryRequest extends FormRequest
             return [
                 'name' => 'required|unique:leave_categories,name',
                 'leave_total' => 'required|integer',
-                'status' => 'required|max:1|min:0'
+                'status' => 'required'
             ];
         }
 
@@ -36,7 +36,7 @@ class LeaveCategoryRequest extends FormRequest
             return [
                 'name' => 'required|unique:leave_categories,name',
                 'leave_total' => 'required|integer',
-                'status' => 'max:1|min:0'
+                'status' => 'required'
             ];
         }
 

@@ -51,7 +51,7 @@ const mutations = {
                 return id !== item.id;
             });
 
-            state.success_message = data.message;
+            state.success_message = data.data.message;
             state.success_status = data.status;
         } else {
             state.success_message = "";
@@ -78,10 +78,10 @@ const actions = {
             });
             commit("GET_ALL_PERMISSION", result.data.data);
         } catch (err) {
-            // Handle errors properly, considering Vuex store structure
-            console.error(err);
-            state.errors = err.response.data.errors;
-            state.error_status = err.response.status;
+            const errors = err.response.data.errors;
+            const errorStatus = err.response.status;
+            commit("SET_ERROR", { errors, errorStatus });
+            throw err; // Re-throw the error to propagate it to the caller
         }
     },
     /*end get all parents*/
@@ -111,8 +111,10 @@ const actions = {
                 commit("GET_SINGLE_PERMISSION", result.data);
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             });
     },
     /*end get single menu*/
@@ -125,8 +127,10 @@ const actions = {
                 commit("UPDATE_PERMISSION", result);
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             });
     },
     /*end update menus*/
@@ -139,8 +143,10 @@ const actions = {
                 commit("DELETE_PERMISSION", { id: id, data: result.data });
             })
             .catch((err) => {
-                state.errors = err.response.data.errors;
-                state.error_status = err.response.status;
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err; // Re-throw the error to propagate it to the caller
             });
     },
     /*end destroy menu*/

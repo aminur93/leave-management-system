@@ -5,7 +5,9 @@ export default {
 </script>
 
 <template>
-  <div id="leave_comment"></div>
+  <div id="leave_comment">
+    
+  </div>
 </template>
 
 <style scoped>

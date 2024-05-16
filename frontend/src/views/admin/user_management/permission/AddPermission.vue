@@ -45,7 +45,7 @@ export default {
               this.add_permission = {};
 
               setTimeout(function () {
-                router.push({path: '/dashboard/permission'});
+                router.push({path: '/permission'});
               },2000)
             }
         })

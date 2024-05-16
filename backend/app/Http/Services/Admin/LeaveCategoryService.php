@@ -69,7 +69,7 @@ class LeaveCategoryService
 
             $leave_category->leave_total = $request->leave_total;
 
-            if ($request->status != null)
+            if ($request->status === 'true')
             {
                 $leave_category->status = 1;
             }else{
@@ -110,11 +110,11 @@ class LeaveCategoryService
             $leave_category->name = $request->name ?? $leave_category->name;
             $leave_category->leave_total = $request->leave_total ?? $leave_category->leave_total;
 
-            if ($request->status != null)
+            if ($request->status === '1')
             {
-                $leave_category->status = 1;
+                $leave_category->status = 1 ?? $leave_category->status;
             }else{
-                $leave_category->status = 0;
+                $leave_category->status = 0 ?? $leave_category->status;
             }
 
             $leave_category->save();
@@ -138,5 +138,18 @@ class LeaveCategoryService
         $leave_category->delete();
 
         return $leave_category;
+    }
+
+    public function changeStatus($id)
+    {
+        $leave_category = LeaveCategory::findOrFail($id);
+
+        if ($leave_category->status == 1)
+        {
+           LeaveCategory::where('id', $id)->update(['status' => 0]);
+
+        }else{
+            LeaveCategory::where('id', $id)->update(['status' => 1]);
+        }
     }
 }
