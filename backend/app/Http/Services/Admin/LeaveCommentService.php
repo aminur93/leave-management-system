@@ -85,7 +85,7 @@ class LeaveCommentService
 
     public function edit($id)
     {
-        $leave_comment = LeaveComment::findOrFail($id);
+        $leave_comment = LeaveComment::with('leave','leave.leaveCategory', 'user')->where('id', $id)->first();
 
         return $leave_comment;
     }

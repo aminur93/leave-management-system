@@ -272,8 +272,12 @@ export default {
 
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-row align="center" justify="center">
-                      <td :class="['mx-2']">
+                      <td :class="['mx-1']">
                         <v-btn color="warning" icon="mdi-pencil" size="x-small" router :to="`/edit-leave/${item.id}`"></v-btn>
+                      </td>
+
+                      <td :class="['mx-1']">
+                        <v-btn color="cyan-darken-4" icon="mdi-comment" size="x-small" router :to="`/add-leave-comment/${item.id}`"></v-btn>
                       </td>
 
                       <td>
