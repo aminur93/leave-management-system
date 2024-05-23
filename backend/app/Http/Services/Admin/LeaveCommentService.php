@@ -4,6 +4,7 @@ namespace App\Http\Services\Admin;
 
 use App\Models\LeaveComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LeaveCommentService
@@ -65,7 +66,7 @@ class LeaveCommentService
 
             $leave_comment = new LeaveComment();
 
-            $leave_comment->user_id = $request->user_id;
+            $leave_comment->user_id = Auth::id();
             $leave_comment->leave_id = $request->leave_id;
             $leave_comment->comment = $request->comment;
 
@@ -78,40 +79,6 @@ class LeaveCommentService
         }catch (\Throwable $throwable){
 
             DB::rollBack();
-
-            throw $throwable;
-        }
-    }
-
-    public function edit($id)
-    {
-        $leave_comment = LeaveComment::with('leave','leave.leaveCategory', 'user')->where('id', $id)->first();
-
-        return $leave_comment;
-    }
-
-    public function update(Request $request, $id)
-    {
-        DB::beginTransaction();
-
-        try {
-
-            // update leave comment
-            $leave_comment = LeaveComment::findOrFail($id);
-
-            $leave_comment->user_id = $request->user_id ?? $leave_comment->user_id;
-            $leave_comment->leave_id = $request->leave_id ?? $leave_comment->leave_comment;
-            $leave_comment->comment = $request->comment ?? $leave_comment->comment;
-
-            $leave_comment->save();
-
-            DB::commit();
-
-            return $leave_comment;
-
-        }catch (\Throwable $throwable){
-
-            DB::commit();
 
             throw $throwable;
         }

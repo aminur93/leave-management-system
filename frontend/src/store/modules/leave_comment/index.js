@@ -40,6 +40,23 @@ const mutations = {
             state.success_status = data.status;
         }
     },
+
+    DELETE_LEAVE_COMMENT: (state, {id, data}) => {
+        if (id)
+        {
+            state.leaves = state.leaveComments.filter(item => {
+                return item.id !== id;
+            })
+
+            state.success_message = data.data.message;
+            state.success_status = data.status;
+        }
+    },
+
+    SET_ERROR(state, { errors, errorStatus }) {
+        state.errors = errors;
+        state.error_status = errorStatus;
+    }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -93,6 +110,22 @@ const actions = {
             })
     },
     /*update leave category end*/
+
+    /*destroy leave comment start*/
+    DeleteLeaveComment: ({commit}, id) => {
+        return http()
+            .delete(`v1/admin/leave-comment/${id}`)
+            .then((result) => {
+                commit("DELETE_LEAVE_COMMENT", {id:id, data:result});
+            })
+            .catch((err) => {
+                const errors = err.response.data.errors;
+                const errorStatus = err.response.status;
+                commit("SET_ERROR", { errors, errorStatus });
+                throw err;
+            })
+    },
+    /*destroy leave comment end*/
 }
 
 /* -------------------------------------------------------------------------- */

@@ -34,7 +34,7 @@ const store = createStore({
 
     plugins: [
         createPersistedState({
-            paths: ["token", "user", "permissions"]
+            paths: ["token", "user", "permissions","role"]
         })
     ]
 });

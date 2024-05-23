@@ -79,7 +79,6 @@ class RoleService
 
             $integerArray = array_map('intval', $stringArray);
 
-
             $role->syncPermissions($integerArray);
 
             $role->save();

@@ -1,35 +1,38 @@
 <script>
+import permissionMixins from "@/mixins/PermissionMixins";
+
 export default {
   name: "LeaveLayout",
+  mixins: [permissionMixins],
   data(){
     return{
       drawer: null ,
       selectedItem: 0,
 
       items: [
-        { title: 'Profile', icon: 'mdi mdi-account-tie', route: '/profile', header_menu: true, dropdown: false},
-        { title: 'Settings', icon: 'mdi-cog', route: '/change-password', header_menu: true, dropdown: false },
+        { title: 'Profile', icon: 'mdi mdi-account-tie', route: '/profile', header_menu: true, dropdown: false, permission: 'profile'},
+        { title: 'Settings', icon: 'mdi-cog', route: '/change-password', header_menu: true, dropdown: false, permission: 'change-password' },
 
-        { title: 'DashBoard', icon: 'mdi-view-dashboard', route: '/dashboard', sidebar_menu: true, dropdown: false },
-        { title: 'Leave-Category', icon: 'mdi mdi-clipboard-list', route: '/leave-category', sidebar_menu: true, dropdown: false },
-        { title: 'Leave', icon: 'mdi mdi-bed', route: '/leave', sidebar_menu: true, dropdown: false },
+        { title: 'DashBoard', icon: 'mdi-view-dashboard', route: '/dashboard', sidebar_menu: true, dropdown: false, permission: 'dashboard-list' },
+        { title: 'Leave-Category', icon: 'mdi mdi-clipboard-list', route: '/leave-category', sidebar_menu: true, dropdown: false, permission: 'leaveCategory-list' },
+        { title: 'Leave', icon: 'mdi mdi-bed', route: '/leave', sidebar_menu: true, dropdown: false, permission: 'leave-list' },
 
         {
           action: 'mdi-account-circle',
           items: [
-            { title: 'User', icon: 'mdi mdi-plus', route: '/user'},
-            { title: 'Roles', icon: 'mdi mdi-plus', route: '/role'},
-            { title: 'Permission', icon: 'mdi mdi-plus', route: '/permission'}
+            { title: 'User', icon: 'mdi mdi-plus', route: '/user', permission: 'user-list'},
+            { title: 'Roles', icon: 'mdi mdi-plus', route: '/role', permission: 'role-list'},
+            { title: 'Permission', icon: 'mdi mdi-plus', route: '/permission', permission: 'permision-list'}
           ],
           title: 'User Management',
           dropdown: true,
           sidebar_menu: true
         },
 
-        { title: 'Leave-Comment', icon: 'mdi mdi-bed', route: '/leave-comment', sidebar_menu: true, dropdown: false },
+        { title: 'Leave-Comment', icon: 'mdi mdi-bed', route: '/leave-comment', sidebar_menu: true, dropdown: false, permission: 'leaveComment-list' },
       ],
 
-      user: JSON.parse(localStorage.getItem('user'))
+      user: JSON.parse(localStorage.getItem('user')),
     }
   },
 
@@ -84,6 +87,7 @@ export default {
               :to="item.route"
               exact
               class="new_theme"
+              @click.prevent="navigateWithPermission(item.permission, item.route)"
           >
           </v-list-item>
 
@@ -107,6 +111,7 @@ export default {
                 :to="child.route"
                 exact
                 class="sub_new_theme_text"
+                @click.prevent="navigateWithPermission(child.permission, child.route)"
             >
             </v-list-item>
           </v-list-group>

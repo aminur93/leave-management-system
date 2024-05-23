@@ -38,10 +38,10 @@ export default {
     },
 
     ...mapState({
-      message: state => state.leave.success_message,
-      errors: state => state.leave.errors,
-      success_status: state => state.leave.success_status,
-      error_status: state => state.leave.error_status
+      message: state => state.leaveComment.success_message,
+      errors: state => state.leaveComment.errors,
+      success_status: state => state.leaveComment.success_status,
+      error_status: state => state.leaveComment.error_status
     })
   },
 
@@ -91,14 +91,9 @@ export default {
       return this.startIndex + item;
     },
 
-    changeStatus: async function({id, data}){
+    deleteLeaveComment: async function(id){
       try {
-
-        let formData = new FormData();
-
-        formData.append('status', data);
-
-        await this.$store.dispatch("leave/statusChange", {id:id, data: formData}).then(() => {
+        await this.$store.dispatch("leaveComment/DeleteLeaveComment", id).then(() => {
           if (this.success_status === 200)
           {
             this.$swal.fire({
@@ -120,7 +115,7 @@ export default {
           title: 'Something wen wrong!!!',
         });
       }
-    }
+    },
   }
 }
 </script>
@@ -193,53 +188,8 @@ export default {
                     <td>{{ item.leave.title }}</td>
                   </template>
 
-                  <template v-slot:[`item.status`]="{ item }">
-                    <td>
-                      <v-menu>
-                        <template v-slot:activator="{ props }">
-                          <div v-if="item.status === 0">
-                            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
-                          </div>
-
-                          <div v-if="item.status === 1" class="custom_button">
-                            <v-btn variant="tonal" color="primary" v-bind="props">Review</v-btn>
-                          </div>
-
-                          <div v-if="item.status === 2" class="custom_button">
-                            <v-btn variant="tonal" color="purple-darken-4" v-bind="props">Pending</v-btn>
-                          </div>
-
-                          <div v-if="item.status === 3" class="custom_button">
-                            <v-btn variant="tonal" color="red-darken-4" v-bind="props">Rejected</v-btn>
-                          </div>
-
-                          <div v-if="item.status === 4" class="custom_button">
-                            <v-btn variant="tonal" color="green-darken-4" v-bind="props">Approved</v-btn>
-                          </div>
-
-                        </template>
-
-                        <v-list>
-                          <v-list-item
-                              v-for="(ite, i) in items"
-                              :key="i"
-                              @click="changeStatus({id:item.id, data: ite.id})"
-                          >
-                            <v-list-item-title style="cursor: pointer">{{ ite.title }}</v-list-item-title>
-                          </v-list-item>
-                        </v-list>
-                      </v-menu>
-                    </td>
-                  </template>
-
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-row align="center" justify="center">
-
-
-                      <td :class="['mx-2']">
-                        <v-btn color="warning" icon="mdi-pencil" size="x-small" router :to="`/edit-leave-comment/${item.id}`"></v-btn>
-                      </td>
-
                       <td>
                         <v-btn color="red" icon="mdi-delete" size="x-small" @click="deleteLeaveComment(item.id)"></v-btn>
                       </td>

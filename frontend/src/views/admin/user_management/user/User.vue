@@ -1,9 +1,11 @@
 <script>
 import {mapState} from "vuex";
 import {http} from "@/service/HttpService";
+import permissionMixins from "@/mixins/PermissionMixins";
 
 export default {
   name: "LeaveUser",
+  mixins: [permissionMixins],
 
   data(){
     return{
@@ -28,6 +30,10 @@ export default {
       let itemsPerPage = this.options.itemsPerPage;
 
       return (currentPage - 1) * itemsPerPage + 1;
+    },
+
+    hasDeletePermission() {
+      return this.checkPermission('user-delete');
     },
 
     ...mapState({
@@ -102,11 +108,19 @@ export default {
           }
         })
       }catch (e) {
-        this.$swal.fire({
-          icon: 'error',
-          text: 'Oops',
-          title: 'Something wen wrong!!!',
-        });
+        if (this.error_status === 403)
+        {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Permission denied',
+          });
+        }else {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
+        }
       }
     }
   }
@@ -135,7 +149,7 @@ export default {
 
                 <v-col cols="6">
                   <v-card-actions class="justify-end">
-                    <v-btn color="success" router to="/add-user">
+                    <v-btn color="success" @click="navigateWithPermission('user-create', '/add-user')">
                       <v-icon small left>mdi-plus</v-icon>
                       <span>Add New</span>
                     </v-btn>
@@ -191,10 +205,10 @@ export default {
                   <template v-slot:[`item.actions`]="{ item }">
                     <v-row align="center" justify="center">
                       <td :class="['mx-2']">
-                        <v-btn color="warning" icon="mdi-pencil" size="x-small" router :to="`/edit-user/${item.id}`"></v-btn>
+                        <v-btn @click="navigateWithPermission('user-edit', `/edit-user/${item.id}`)" color="warning" icon="mdi-pencil" size="x-small"></v-btn>
                       </td>
 
-                      <td>
+                      <td v-if="hasDeletePermission">
                         <v-btn color="red" icon="mdi-delete" size="x-small" @click="deleteUser(item.id)"></v-btn>
                       </td>
                     </v-row>

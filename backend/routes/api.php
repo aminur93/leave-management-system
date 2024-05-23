@@ -38,6 +38,14 @@ Route::group(['prefix' => 'v1/auth'], function (){
 /*Admin route start*/
 Route::group(['prefix' => 'v1/admin', 'middleware' => 'jwtAuth'], function (){
 
+    /*check permission route start*/
+    Route::get('check-permission', [\App\Http\Controllers\CheckPermissionController::class, 'checkPermission']);
+    /*check permission route end*/
+
+    /*Dashboard route start*/
+    Route::get('/dashboard', [\App\Http\Controllers\Api\V1\Admin\DashboardController::class, 'index']);
+    /*Dashboard route end*/
+
     /*user route start*/
     Route::get('/user', [\App\Http\Controllers\Api\V1\Admin\UserController::class, 'index']);
     Route::post('/user', [\App\Http\Controllers\Api\V1\Admin\UserController::class, 'store'])->name('user.store');

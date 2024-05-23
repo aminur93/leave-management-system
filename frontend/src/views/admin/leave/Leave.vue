@@ -30,6 +30,13 @@ export default {
         { title: 'Rejected', 'id': 3 },
         { title: 'Approved', 'id': 4 },
       ],
+
+      dialog: false,
+
+      add_comment: {
+        leave_id: '',
+        comment: ''
+      }
     }
   },
 
@@ -45,7 +52,12 @@ export default {
       message: state => state.leave.success_message,
       errors: state => state.leave.errors,
       success_status: state => state.leave.success_status,
-      error_status: state => state.leave.error_status
+      error_status: state => state.leave.error_status,
+
+      commentMessage: state => state.leaveComment.success_message,
+      commentErrors: state => state.leaveComment.errors,
+      commentSuccess_status: state => state.leaveComment.success_status,
+      commentError_status: state => state.leaveComment.error_status
     })
   },
 
@@ -149,6 +161,55 @@ export default {
           text: 'Oops',
           title: 'Something wen wrong!!!',
         });
+      }
+    },
+
+    openDialog(leave_id){
+      this.dialog = true;
+      this.add_comment.leave_id = leave_id;
+    },
+
+    DialogClose(){
+      this.dialog = false;
+      this.add_comment = {};
+    },
+
+    addComment: async function(){
+
+      try {
+
+        let formData = new FormData();
+
+        formData.append('leave_id', this.add_comment.leave_id);
+        formData.append('comment', this.add_comment.comment);
+
+        await this.$store.dispatch("leaveComment/StoreLeave", formData).then(() => {
+          if (this.commentSuccess_status === 201)
+          {
+            this.$swal.fire({
+              toast: true,
+              position: 'top-end',
+              icon: 'success',
+              title: this.commentMessage,
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            this.add_comment = {};
+            this.dialog = false;
+          }
+        })
+      }catch (e) {
+        if (this.commentError_status === 422)
+        {
+          console.log('error');
+        }else {
+          this.$swal.fire({
+            icon: 'error',
+            text: 'Oops',
+            title: 'Something wen wrong!!!',
+          });
+        }
       }
     }
   }
@@ -277,7 +338,66 @@ export default {
                       </td>
 
                       <td :class="['mx-1']">
-                        <v-btn color="cyan-darken-4" icon="mdi-comment" size="x-small" router :to="`/add-leave-comment/${item.id}`"></v-btn>
+                          <v-btn
+                              color="cyan-darken-4"
+                              icon="mdi-comment"
+                              size="x-small"
+                              @click="openDialog(item.id)"
+                          ></v-btn>
+
+                        <v-dialog max-width="500" v-model="dialog">
+                            <v-card title="Add Comment">
+                              <v-card-text>
+                                <v-form v-on:submit.prevent="addComment">
+                                  <v-col cols="12">
+                                    <v-row wrap>
+
+                                      <v-col cols="12" md="8" sm="12" lg="12">
+                                        <v-text-field
+                                            type="text"
+                                            :model-value="item.title"
+                                            label="Leave Title"
+                                            persistent-hint
+                                            variant="outlined"
+                                            required
+                                        ></v-text-field>
+                                      </v-col>
+
+                                      <v-col cols="12" md="8" sm="12" lg="12">
+                                        <v-textarea
+                                            v-model="add_comment.comment"
+                                            label="Description"
+                                            variant="outlined"
+                                        ></v-textarea>
+                                        <p v-if="errors.description" class="error custom_error">{{errors.description[0]}}</p>
+                                      </v-col>
+
+                                      <v-row wrap>
+                                        <v-col cols="12" md="8" sm="12" lg="12" :class="['d-flex', 'justify-end']">
+                                          <v-btn
+                                              flat
+                                              color="primary"
+                                              text="Close"
+                                              class="custom-btn mr-2"
+                                              @click="DialogClose"
+                                          ></v-btn>
+
+                                          <v-btn
+                                              flat
+                                              color="success"
+                                              type="submit"
+                                              class="custom-btn mr-2"
+                                          >
+                                            Submit
+                                          </v-btn>
+                                        </v-col>
+                                      </v-row>
+                                    </v-row>
+                                  </v-col>
+                                </v-form>
+                              </v-card-text>
+                            </v-card>
+                        </v-dialog>
                       </td>
 
                       <td>

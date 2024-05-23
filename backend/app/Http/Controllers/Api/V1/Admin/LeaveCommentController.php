@@ -73,46 +73,6 @@ class LeaveCommentController extends Controller implements HasMiddleware
         }
     }
 
-    public function edit($id)
-    {
-        try {
-
-            $leave_comment = $this->leaveCommentService->edit($id);
-
-            return GlobalMessage::success($leave_comment, "Fetch successful", Response::HTTP_OK);
-
-        }catch (ModelNotFoundException $exception){
-
-            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_BAD_REQUEST);
-
-        }catch (\Exception $exception){
-
-            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public function update(LeaveCommentrequest $request, $id)
-    {
-        try {
-
-            $leave_comment = $this->leaveCommentService->update($request, $id);
-
-            return GlobalMessage::success($leave_comment, "Update successful", Response::HTTP_OK);
-
-        }catch (ValidationException $exception){
-
-            return GlobalMessage::error($exception->errors(), $exception->getMessage(), $exception->status);
-
-        }catch (ModelNotFoundException $exception){
-
-            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_BAD_REQUEST);
-
-        }catch (\Exception $exception){
-
-            return GlobalMessage::error("", $exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
     public function destroy($id)
     {
         try {
